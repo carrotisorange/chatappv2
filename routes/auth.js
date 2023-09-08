@@ -7,11 +7,6 @@ router.get('/', (req, res)=>{
     res.render('login',{title:'Login Page'});
 });
 
-//fake database
-const credential = {
-    email:'kodego@test.com',
-    password: '12345678'
-}
 
 router.post('/login', 
 
@@ -27,7 +22,6 @@ router.post('/login',
     .withMessage('password must be at least 8 characters.')
 ]
 
-
 ,(req, res)=>{
     const email = req.body.email;
     const password = req.body.password;
@@ -39,7 +33,7 @@ router.post('/login',
         // res.send({ errors: errors.array() });
         res.render('login',{title:'Login Page', errors: 'Please check your input' });
     }else{
-        if(email == credential.email && password == credential.password){
+        if(isCredentialCorrect(email, password)){
             //create a session
             req.session.user = req.body.email;
             res.redirect('/dashboard');
@@ -48,6 +42,21 @@ router.post('/login',
         }
     }
 });
+
+function isCredentialCorrect(email, password){
+ //fake database
+    const credential = {
+    email:'kodego@test.com',
+    password: '12345678'
+    }
+
+
+    if(email == credential.email && password == credential.password){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 router.get('/dashboard', (req, res)=>{
     if(req.session.user){
@@ -69,5 +78,5 @@ router.post('/logout', (req, res)=>{
    
 });
 
+ module.exports = router;
 
-module.exports = router;
